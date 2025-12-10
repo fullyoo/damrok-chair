@@ -5,10 +5,12 @@
 
 /* 공통영역 */
 * {
+	padding: 0;
+	margin: 0;
+	box-sizing: border-box;
 	line-height: 1.6;
 	letter-spacing: -.5px;
 	word-break: keep-all;
-	box-sizing: border-box;
 }
 
 :root {
@@ -61,6 +63,15 @@
 
 .hidden {
 	display: none;
+}
+
+video {
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+	/* 화면 꽉 채우기, 비율 유지 */
+	object-position: center top;
+	/* 보이는 영역 기준 위치 */
 }
 
 
@@ -891,7 +902,10 @@
 	}
 }
 
-@media (max-width:800px) {
+@media (max-width:767px) {
+	* {
+		line-height: 1.3;
+	}
 
 	.footer .top .addr {}
 

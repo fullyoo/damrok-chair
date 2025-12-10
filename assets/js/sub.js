@@ -2,18 +2,26 @@ $(function () {
 
     /****** 1. 서브 비주얼 영역 ******/
     let fadeSpeed = 120;
+    let timers = []; // ★ 실행 중인 모든 타이머 저장
+
+    function clearTimers() {
+        timers.forEach(t => clearTimeout(t));
+        timers = [];
+    }
 
     function startFade() {
+        clearTimers(); // ★ 기존 타이머 전부 제거 (겹침 방지)
+
         const inputText = $('#custom-text').val();
         if (!inputText) return;
 
-        const $fadeText = $('.fade-text'); // 클래스 사용
-        $fadeText.empty();
+        const $fadeText = $('.fade-text');
+        $fadeText.empty(); // ★ 기존 글자 제거
 
         const chars = inputText.split('');
 
         $.each(chars, function (index, char) {
-            setTimeout(function () {
+            const timer = setTimeout(function () {
 
                 if (char === '\n') {
                     $fadeText.append('<br>');
@@ -27,22 +35,40 @@ $(function () {
                 $fadeText.append($span);
 
             }, index * fadeSpeed);
+
+            timers.push(timer); // ★ 타이머 저장
         });
     }
 
-    function resetFade() {
-        $('.fade-text').empty();
-    }
+    /*** ↓↓↓↓↓ 이미지 애니 종료 0.3초 전 실행 ↓↓↓↓↓ ***/
 
-    // Enter 입력 시 실행
+    const $img = $(".sv-sec img");
+    const $fadeText = $(".sv-title-wrap h2.fade-text");
+
+    // aniDuration 읽기 + fallback
+    let aniDuration = window.getComputedStyle($img[0]).animationDuration;
+    let aniSec = parseFloat(aniDuration);
+    if (!aniSec || aniSec === 0) aniSec = 1;
+
+    let aniMs = aniSec * 1000;
+    let startBefore = 300;
+    let delay = aniMs - startBefore;
+    if (delay < 0) delay = 0;
+
+    // load와 무관하게 강제 실행
+    setTimeout(function () {
+
+        $fadeText.addClass("sv-fade-start");
+        startFade();
+
+    }, delay);
+
+    /*** ↑↑↑↑↑ END ↑↑↑↑↑ ***/
+
     $('#custom-text').on('keypress', function (e) {
         if (e.key === 'Enter') startFade();
     });
 
-    // 페이지 로드 후 자동 실행
-    $(window).on('load', startFade);
-
-    // 속도 조절 input
     $('#speed').on('input', function () {
         fadeSpeed = $(this).val();
         $('#speedValue').text(fadeSpeed + 'ms');
@@ -51,7 +77,7 @@ $(function () {
 
 
 
-    /****** 2. Chair-list 영역 ******/
+    /****** 2. Chair-list 리스트 영역 ******/
 
     /********************************************
          *  Gallery Section
@@ -190,7 +216,7 @@ $(function () {
 
 
 
-    /****** 3. Chair-view 영역 ******/
+    /****** 3. Chair-view 뷰 영역 ******/
 
     /**************************************
      *  화면 좌우 확대
@@ -228,236 +254,236 @@ $(function () {
 
 
     /****** 4. Why Damrok? 어바웃 영역 ******/
+    /***************************************************
+             * 1. 모바일 감지
+             * - Mobi 또는 Android 문자열이 userAgent에 있으면 모바일로 판단
+             ***************************************************/
+    const isMobile = /Mobi|Android/i.test(navigator.userAgent);
 
-    function initSlider() {
-        const slider = $(".mv-sec .slide_wrap .slide_ctn");
-        let autoplaySpeed = 3000;
 
-        const bars = $(".progress_ctn .bars_container");
+    /***************************************************
+     * 2. autoplaySpeed 설정
+     * - 모바일: 2000ms (좀 더 빠르게)
+     * - PC: 3000ms
+     ***************************************************/
+    const autoplaySpeed = isMobile ? 3000 : 3000;
 
-        const updateBars = (i) => {
-            bars.find(".bar").removeClass("active");
-            bars.find(".bar").eq(i).addClass("active");
-        };
+    /***************************************************
+     * 3. 재생 상태 저장 변수
+     * - true  : 자동재생 중
+     * - false : 일시정지 상태
+     ***************************************************/
+    let isPlaying = true;
 
-        // 화면 크기에 따라 진행바 목표값 결정 (mobile이면 100%, 아니면 95%)
-        function getProgressTargetPercent() {
-            // 모바일 기준: 너비 768px 이하(필요시 수치 변경)
-            const isMobile = window.matchMedia("(max-width: 768px)").matches;
-            return isMobile ? "100%" : "95%";
-        }
 
-        const startProgress = (duration) => {
-            const target = getProgressTargetPercent(); // 동적으로 결정
-            const bar = bars.find(".bar.active span");
 
-            // 안전하게 애니메이션 초기화
-            bar.stop(true, true)
-                .css({
-                    width: 0,
-                    opacity: 1
-                })
-                .animate(
-                    { width: target }, // 모바일이면 100%로 애니메이트
-                    duration,
-                    "linear",
-                    () => {
-                        bar.animate({ opacity: 0 }, 500);
-                    }
-                );
-        };
+    /***************************************************
+     * 4. 진행바(막대) 생성 함수
+     * - 슬라이드 개수만큼 진행바 DOM 생성
+     * - 진행바 클릭 시 해당 슬라이드로 이동
+     ***************************************************/
+    function createProgressBars(slideCount) {
+        const barsContainer = $('.bars_container');
+        barsContainer.empty(); // 기존 진행바 초기화
 
-        slider
-            .on("init", function (e, slick) {
-                const total = slick.slideCount;
+        for (let i = 0; i < slideCount; i++) {
+            // 진행바 단일 요소 생성
+            const bar = $(`
+            <div class="progress_bar" data-index="${i}">
+                <div class="progress_bar_fill"></div>
+            </div>
+        `);
 
-                bars.empty();
-                for (let i = 0; i < total; i++) {
-                    bars.append(`
-                    <div class="bar" data-slide="${i}">
-                        <span></span>
-                    </div>
-                `);
+            /***********************************************
+             * 진행바 클릭 시
+             * - 해당 슬라이드로 이동 (slickGoTo)
+             * - 만약 재생 중이 아니라면 자동재생 재시작
+             ***********************************************/
+            bar.on('click', function (e) {
+                e.stopPropagation();
+                const targetIndex = $(this).data('index');
+
+                $('.mv_slide_ctn').slick('slickGoTo', targetIndex);
+
+                if (!isPlaying) {
+                    $('.mv_slide_ctn').slick('slickPlay');
+                    $('.play_btn').addClass('playing');
+                    isPlaying = true;
                 }
-
-                updateBars(0);
-
-                // 전체 초기화
-                bars.find(".bar span").css({ width: 0, opacity: 0 });
-
-                startProgress(autoplaySpeed);
-            })
-
-            .on("beforeChange", (e, slick, current, next) => {
-
-                // 🔥 무조건 전체 초기화 (핵심)
-                bars.find(".bar span").stop(true, true).css({
-                    width: 0,
-                    opacity: 0
-                });
-
-                updateBars(next);
-
-                // next span만 애니메이션 준비 상태
-                bars.find(".bar").eq(next).find("span").css({
-                    width: 0,
-                    opacity: 1
-                });
-            })
-
-            .on("afterChange", (e, slick, current) => {
-                startProgress(autoplaySpeed);
-            })
-
-            .slick({
-                arrows: false,
-                fade: true,
-                autoplay: true,
-                autoplaySpeed: autoplaySpeed,
-                infinite: true,
-                speed: 0,
-                pauseOnHover: false,
-                pauseOnFocus: false,
-                cssEase: "linear",
             });
 
+            // 막대 컨테이너에 추가
+            barsContainer.append(bar);
+        }
+    }
 
-        $(".play_btn .stop").on("click", function () {
-            const activeBar = bars.find(".bar.active");
-            const bar = activeBar.find("span");
-            const target = getProgressTargetPercent(); // 재생시에도 동일한 목표 사용
 
-            if (!$(this).hasClass("on")) {
-                // 정지
-                $(this).addClass("on");
-                slider.slick("slickPause");
 
-                // 현재 active span 숨기기
-                bar.stop(true, true).css({
-                    width: 0,
-                    opacity: 0
-                });
-            } else {
-                // 재생
-                $(this).removeClass("on");
-                slider.slick("slickPlay");
+    /***************************************************
+     * 5. 진행바 업데이트
+     * - 현재 슬라이드 기준으로 이전 막대는 모두 100%
+     * - 현재 슬라이드는 width 0 → 100% 애니메이션
+     ***************************************************/
+    function updateProgressBar(currentIndex) {
+        // 모든 진행바 초기화
+        $('.progress_bar').removeClass('active');
+        $('.progress_bar .progress_bar_fill').css('width', '0%');
 
-                // 항상 0%에서 시작 — 모바일이면 target이 100%로 동작
-                bar.css({
-                    width: 0,
-                    opacity: 1
-                }).animate({ width: target }, autoplaySpeed, "linear", function () {
-                    bar.animate({ opacity: 0 }, 500);
+        // 하나씩 체크
+        $('.progress_bar').each(function (index) {
+
+            // 이미 지난 슬라이드는 100%
+            if (index < currentIndex) {
+                $(this).find('.progress_bar_fill').css('width', '100%');
+
+                // 현재 슬라이드 → 애니메이션 실행
+            } else if (index === currentIndex) {
+                $(this).addClass('active');
+                $(this).find('.progress_bar_fill').css({
+                    'animation-duration': (autoplaySpeed / 1000) + 's',
+                    'width': '100%'
                 });
             }
         });
+    }
 
-        // 진행바 클릭으로 이동
-        $(document).on("click", ".progress_ctn .bar", function () {
-            slider.slick("slickGoTo", $(this).data("slide"));
+
+
+    /***************************************************
+     * 6. 슬라이더 초기화
+     * - slick 옵션 등록
+     * - beforeChange에서 진행바 업데이트
+     * - 재생/일시정지 버튼 동작
+     ***************************************************/
+    function initSlider() {
+        const slideCount = $('.mv_slide_ctn .item').length;
+
+        // 슬라이더 초기화 전에 진행바 먼저 생성
+        createProgressBars(slideCount);
+
+        /***************************************************
+         * slick() 슬라이더 설정
+         ***************************************************/
+        $('.mv_slide_ctn').slick({
+            arrows: false,
+            fade: true,
+            autoplay: true,
+            autoplaySpeed: autoplaySpeed,
+            infinite: true,
+            speed: 500,
+            pauseOnHover: false,
+            pauseOnFocus: false,
+            cssEase: "linear",
         });
 
-        // (선택) 창 크기 변경시 진행 target이 바뀔 수 있으므로, resize 이벤트에서 현재 활성 span을 리셋해주면 안정적
-        $(window).on("resize", function () {
-            // 현재 active span 애니메이션 초기화 (resize시 보정)
-            bars.find(".bar span").stop(true, true).css({ width: 0, opacity: 0 });
-            // 현재 슬라이드의 진행을 다시 시작
-            const currentIndex = slider.slick("slickCurrentSlide");
-            updateBars(currentIndex);
-            bars.find(".bar").eq(currentIndex).find("span").css({ width: 0, opacity: 1 });
-            startProgress(autoplaySpeed);
+        // 첫 슬라이드의 진행바 적용
+        updateProgressBar(0);
+
+
+        /***************************************************
+         * 슬라이드 변경 직전에 발생
+         * - nextSlide 값 기준으로 진행바 업데이트
+         ***************************************************/
+        $('.mv_slide_ctn').on('beforeChange', function (event, slick, currentSlide, nextSlide) {
+            updateProgressBar(nextSlide);
+        });
+
+
+        /***************************************************
+         * 재생/정지 버튼
+         * - isPlaying 값에 따라 slickPause / slickPlay 실행
+         ***************************************************/
+        $('.play_btn').on('click', function () {
+            if (isPlaying) {
+                // 일시정지 처리
+                $('.mv_slide_ctn').slick('slickPause');
+                $(this).removeClass('playing');
+                $('.progress_bar.active .progress_bar_fill').css('animation-play-state', 'paused');
+                isPlaying = false;
+
+            } else {
+                // 다시 재생 처리
+                $('.mv_slide_ctn').slick('slickPlay');
+                $(this).addClass('playing');
+                $('.progress_bar.active .progress_bar_fill').css('animation-play-state', 'running');
+                isPlaying = true;
+            }
+        });
+
+        // 초기 상태는 재생 중 상태로 표시
+        $('.play_btn').addClass('playing');
+    }
+
+
+
+    /***************************************************
+     * 7. 모바일 전용 기능
+     * - 모바일에서만 스크롤 시 autoplay 강제로 유지
+     * - iOS Safari의 visibilitychange 문제도 모바일에서만 적용
+     ***************************************************/
+    if (isMobile) {
+
+        let scrollTimer;
+
+        /***********************************************
+         * 모바일 Scroll / TouchMove 시 동작
+         * - 자동재생이 꺼져 있으면 다시 재생
+         * - 스크롤 중에도 autoplay가 멈추지 않도록 강제 유지
+         ***********************************************/
+        $(window).on('scroll touchmove', function () {
+
+            // 재생이 꺼져있으면 다시 실행
+            if (!isPlaying) {
+                $('.mv_slide_ctn').slick('slickPlay');
+                $('.play_btn').addClass('playing');
+                isPlaying = true;
+            }
+
+            // 스크롤 멈추고 20ms 후에도 재생 유지
+            clearTimeout(scrollTimer);
+            scrollTimer = setTimeout(() => {
+                $('.mv_slide_ctn').slick('slickPlay');
+                $('.play_btn').addClass('playing');
+                isPlaying = true;
+            }, 20);
+        });
+
+
+        /***********************************************
+         * iOS Safari 전용 문제 대응
+         * - 스크롤 중에도 visibilityState가 hidden으로 바뀌는 버그 존재
+         * - 다시 visible로 돌아왔을 때 autoplay 강제 재개
+         ***********************************************/
+        document.addEventListener("visibilitychange", () => {
+            if (document.visibilityState === "visible") {
+                $('.mv_slide_ctn').slick('slickPlay');
+                $('.play_btn').addClass('playing');
+                isPlaying = true;
+            }
         });
     }
 
+
+
+    /***************************************************
+     * 8. 슬라이더 실제 실행
+     ***************************************************/
     initSlider();
 
 
 
 
 
-    /****** 4. FAQ 자주묻는 질문 영역 ******/
 
-    /********************************************
-     *  FAQ Pagination Setup
-     ********************************************/
 
-    const $faqTopicsContainer = $('.topics');
-    const $faqAllTopics = $('.topic');
-    let faqItemsPerPage = 4;
-    let faqCurrentPage = 1;
+    /****** 5. FAQ 자주묻는 질문 영역 ******/
 
-    function showFaqPage(page) {
-        faqCurrentPage = page;
-        const start = (page - 1) * faqItemsPerPage;
-        const end = start + faqItemsPerPage;
 
-        $faqAllTopics.hide().slice(start, end).show();
-        generateFaqPagination();
-        playFaqFadeIn();
-    }
 
-    function getFaqPageNumbers(current, total) {
-        const pages = [];
-        if (total <= 7) {
-            for (let i = 1; i <= total; i++) pages.push(i);
-        } else {
-            if (current <= 3) {
-                for (let i = 1; i <= 4; i++) pages.push(i);
-                pages.push('...');
-                pages.push(total);
-            } else if (current >= total - 2) {
-                pages.push(1);
-                pages.push('...');
-                for (let i = total - 3; i <= total; i++) pages.push(i);
-            } else {
-                pages.push(1);
-                pages.push('...');
-                for (let i = current - 1; i <= current + 1; i++) pages.push(i);
-                pages.push('...');
-                pages.push(total);
-            }
-        }
-        return pages;
-    }
 
-    function createFaqButton(html, onClick, disabled = false, active = false) {
-        const $btn = $('<button></button>').html(html);
-        if (disabled) $btn.prop('disabled', true);
-        if (active) $btn.addClass('active');
-        $btn.on('click', onClick);
-        return $btn;
-    }
 
-    function generateFaqPagination() {
-        const totalPages = Math.ceil($faqAllTopics.length / faqItemsPerPage);
-        const $pagination = $('#faq-pagination');
-        $pagination.empty();
 
-        if (totalPages <= 1) return;
 
-        $pagination.append(createFaqButton('<i class="iconoir-fast-arrow-left"></i>', () => showFaqPage(1), faqCurrentPage === 1).addClass('page-nav'));
-        $pagination.append(createFaqButton('<i class="iconoir-nav-arrow-left"></i>', () => showFaqPage(faqCurrentPage - 1), faqCurrentPage === 1).addClass('page-nav'));
-
-        const pageNumbers = getFaqPageNumbers(faqCurrentPage, totalPages);
-        $.each(pageNumbers, (_, num) => {
-            if (num === '...') {
-                $pagination.append('<span class="dots">...</span>');
-            } else {
-                $pagination.append(createFaqButton(num, () => showFaqPage(num), false, num === faqCurrentPage).addClass('page-number'));
-            }
-        });
-
-        $pagination.append(createFaqButton('<i class="iconoir-nav-arrow-right"></i>', () => showFaqPage(faqCurrentPage + 1), faqCurrentPage === totalPages).addClass('page-nav'));
-        $pagination.append(createFaqButton('<i class="iconoir-fast-arrow-right"></i>', () => showFaqPage(totalPages), faqCurrentPage === totalPages).addClass('page-nav'));
-    }
-
-    function playFaqFadeIn() {
-        $faqTopicsContainer.removeClass('fade-in');
-        void $faqTopicsContainer[0].offsetWidth;
-        $faqTopicsContainer.addClass('fade-in');
-    }
-
-    showFaqPage(1);
 
 
 

@@ -62,15 +62,24 @@ h2.fade-text {
     transform: translate(-50%, -50%);
 }
 
+/* 처음에는 투명 */
 .sv-title-wrap h2.fade-text {
     color: var(--color-white);
     width: 100%;
+    opacity: 0;
+    /* opacity: 0; 주석처리시 시간차 미적용 */
+    transition: opacity 0.3s ease;
+}
+
+/* 이미지 애니메이션 종료 후 적용할 전용 클래스 */
+.sv-title-wrap h2.fade-text.sv-fade-start {
+    opacity: 1;
 }
 
 .char {
     display: inline-block;
     opacity: 0;
-    animation: fadeInChar 0.8s ease forwards;
+    animation: fadeInChar 0.5s ease forwards;
 }
 
 @keyframes fadeInChar {
@@ -96,16 +105,16 @@ input {
     -webkit-transform: translateX(-50%);
     transform: translateX(-50%);
     object-fit: cover;
-    -webkit-animation: snb 2s;
-    animation: svi 2s;
+    /* -webkit-animation: svi 2s; */
+    animation: svi 1.5s;
 }
 
 @keyframes svi {
     0% {
         filter: blur(10px);
         -webkit-filter: blur(10px);
-        transform: translateX(-50%) scale(1.2);
-        -webkit-transform: translateX(-50%) scale(1.2);
+        transform: translateX(-50%) scale(1.1);
+        -webkit-transform: translateX(-50%) scale(1.1);
     }
 
     100% {
@@ -359,7 +368,7 @@ input {
     width: 100%;
     height: 100vh;
     height: 100%;
-    min-height: 970px;
+    min-height: 800px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -626,22 +635,36 @@ input {
 .about-box {}
 
 .about-box .slide_wrap {
-    background-color: var(--color-white);
     width: 810px;
     height: 650px;
+    display: flex;
+    align-items: flex-start;
+    background-color: var(--color-white);
+    /* background-color: red; */
 }
 
-.about-box .slide_wrap .slide_ctn {
+.about-box .slide_wrap .mv_slide_ctn {
     height: 600px;
     overflow: hidden;
 }
 
-.about-box .slide_wrap .slide_ui .progress_ctn {
-    margin-top: 0;
-    gap: 0;
+.about-box .slide_wrap .progress_bar {
+    height: 7px;
+    border: 1px solid var(--color-border);
+    border: 1px solid var(--color-beigebg);
 }
 
-.about-box .slide_wrap .slide_ui {
+.about-box .slide_wrap .progress_bar_fill {
+    background-color: var(--color-border);
+    background-color: var(--color-beigebg);
+}
+
+.about-box .slide_wrap .play_btn {
+    border: 1px solid var(--color-border);
+    background-color: var(--color-border);
+}
+
+.about-box .slide_wrap .mv_slide_ui {
     width: 100%;
     max-width: 100%;
     position: absolute;
@@ -649,62 +672,65 @@ input {
     bottom: 0px;
     left: 0;
     transform: translate(0);
+    justify-content: flex-end;
 }
 
-.about-box .slide_wrap .slide_ui .progress_ctn .bar {
+.about-box .progress_ctn .bar {
     width: 60px;
 }
 
-.about-box .slide_wrap .slide_ui .progress_ctn .bar span {
+.about-box .progress_ctn .bar span {
     top: 13px;
 }
 
-.about-box .slide_wrap .slide_ui .progress_ctn .bar::before {
+.about-box .progress_ctn .bar::before {
     background-color: var(--color-border);
     height: 5px;
     top: 13px;
 }
 
-.about-box .slide_wrap .slide_ui .progress_ctn .bar.active span {
+.about-box .progress_ctn .bar.active span {
     height: 5px;
 }
 
-.about-box .slide_wrap .slide_ui .progress_ctn .bar.active span {
-    /* width: 90% !important; */
-}
-
-.about-box.slide_wrap .slide_ui .progress_ctn .play_btn .stop.on {
+.about-boxs .progress_ctn .play_btn .stop.on {
     background-color: var(--color-border);
 }
 
-.about-box .slide_wrap .slide_ui .progress_ctn .play_btn .stop {
-    background-color: var(--color-border);
+.about-box .progress_ctn .play_btn .stop {
+    border-color: transparent transparent transparent #fff
 }
 
-.about-box .slide_wrap .slide_ui .progress_ctn .play_btn .stop.on {
-    background-color: var(--color-border);
-}
-
-.about-box .slide_wrap .slide_ctn .item .bg {
+.about-box .slide_wrap .mv_slide_ctn .item .bg {
     height: 650px;
 }
 
-.about-box .slide_wrap .slide_ctn .item .bg01 {
+.about-box .slide_wrap .mv_slide_ctn .item .bg01 {
     background: url(../images/sub/brand-about01.jpg) 50% 50% no-repeat;
 }
 
-.about-box .slide_wrap .slide_ctn .item .bg02 {
+.about-box .slide_wrap .mv_slide_ctn .item .bg02 {
     background: url(../images/sub/brand-about02.jpg) 0% 50% no-repeat;
 }
 
-.about-box .slide_wrap .slide_ctn .item .bg03 {
+.about-box .slide_wrap .mv_slide_ctn .item .bg03 {
     background: url(../images/sub/brand-about03.jpg) 50% 50% no-repeat;
 }
 
-.about-box .slide_wrap .slide_ctn .item.slick-active .bg01,
-.about-box .slide_wrap .slide_ctn .item.slick-active .bg02,
-.about-box .slide_wrap .slide_ctn .item.slick-active .bg03 {
+.about-box .slide_wrap .mv_slide_ctn .item.slick-active .bg01,
+.about-box .slide_wrap .mv_slide_ctn .item.slick-active .bg02,
+.about-box .slide_wrap .mv_slide_ctn .item.slick-active .bg03 {
     animation: zoom 2s both;
+}
+
+@keyframes zoom {
+    0% {
+        transform: scale(1.02);
+    }
+
+    100% {
+        transform: scale(1);
+    }
 }
 
 .about-txt {
@@ -728,12 +754,55 @@ input {
 .about-txt p {}
 
 
-/* 어바웃-브랜드 영역 */
 
+
+/* 어바웃-브랜드 영역 */
 .s-brand-sec {
-    /* display: none; */
+    position: relative;
+    width: 100%;
+    /* height: 100vh; */
+    /* min-height: 700px; */
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 150px 0;
+    background: none;
 }
 
+/* 백그라운드 유튜브 영상 */
+.video-bg {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    z-index: 1;
+}
+
+.video-bg iframe {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    min-width: 100%;
+    min-height: 100%;
+    width: 178vh;
+    /* 16:9 비율 유지하는 트릭 */
+    height: 100vh;
+    pointer-events: none;
+}
+
+.video-dim {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0 0 0 /20%);
+    z-index: 1;
+}
 
 .text-box-wrap {
     position: relative;
@@ -879,23 +948,31 @@ input {
 
 
 
+
 /****** 4. Community 영역 ******/
+
 .s-community-sec {}
 
 #sub .sub-content.s-community-sec {
     padding-top: 0;
 }
 
-.s-community-sec .chair-view-wrap {
-    min-height: 800px;
-}
-
 .s-community-sec .chair-view-wrap::before {
     background: url(../images/sub/community-bg.jpg) no-repeat center / cover;
 }
 
+.s-community-sec .m_tit {
+    opacity: 1;
+    /* transform: none; */
+}
+
+.s-community-sec .m_tit p {
+    margin-top: 15px;
+}
+
+
 .link-box {
-    margin-top: 70px;
+    margin-top: 60px;
 }
 
 .link-box a {
@@ -903,6 +980,9 @@ input {
     text-align: center;
     width: 180px;
 }
+
+.s-community-sec .link-box {}
+
 
 .s-community-sec a.cta {
     color: var(--color-white);
@@ -920,15 +1000,17 @@ input {
     background-color: #fff;
 }
 
+
+
 /* faq-자주묻는 질문 */
 .topics {
     border-top: 3px solid var(--color-text);
-    opacity: 0;
-    transform: translateY(20px);
+    /* opacity: 0; */
+    transform: translateY(50px);
 }
 
 .topics.fade-in {
-    animation: fadeIn .5s .3s forwards;
+    animation: fadeIn 1s .3s forwards;
 }
 
 
@@ -1094,8 +1176,28 @@ input {
 
 /****** 반응형 브레이크 포인트 (모바일 반응형)******/
 
+@media (min-width: 1800px) {
+    .video-bg {
+        overflow: hidden !important;
+    }
+
+    .video-bg iframe {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -52%);
+        /* 살짝 더 위로 올려서 재생바 완전 숨김 */
+        width: 110vw;
+        /* 가로 더 크게 */
+        height: 62vw;
+        /* 세로도 크게 해서 아래 UI 안 보이게 */
+        pointer-events: none;
+    }
+}
+
+
 @media (max-width: 1500px) {
-    .about-box .slide_wrap .slide_ui {
+    .about-box .slide_wrap .mv_slide_ui {
         padding: 0;
     }
 }
@@ -1136,6 +1238,8 @@ input {
 
     .s-brand-sec {
         min-height: auto;
+        padding: 80px 0;
+        height: auto;
     }
 
     .s-brand-sec h4 {
@@ -1251,20 +1355,20 @@ input {
         height: 500px;
     }
 
-    .about-box .slide_wrap .slide_ui .progress_ctn .bar::before {
+    .about-box .slide_wrap .mv_slide_ui {
+        align-items: center;
+    }
+
+    .about-box .progress_ctn .bar::before {
         top: 10px;
     }
 
-    .about-box .slide_wrap .slide_ui .progress_ctn .bar span {
+    .about-box .progress_ctn .bar span {
         top: 10px;
     }
 
-    .about-box .slide_wrap .slide_ctn .item .bg {
+    .about-box .slide_wrap .mv_slide_ctn .item .bg {
         height: 450px;
-    }
-
-    .about-box .slide_wrap .slide_ui .progress_ctn {
-        justify-content: center;
     }
 
     .about-txt {
@@ -1297,6 +1401,23 @@ input {
 
     .contact-info-wrap .link-box {
         flex-direction: row;
+    }
+
+    .line-wrap {
+        width: 100%;
+        height: 2px;
+    }
+
+    .line-wrap .line {
+        display: block;
+        width: 300%;
+        height: 2px;
+        transform: translateX(-100%);
+        transition: var(--transition-10s);
+    }
+
+    .cta:hover .line-wrap .line {
+        transform: translateX(0);
     }
 
 
@@ -1449,6 +1570,7 @@ input {
         flex-direction: column;
         align-items: center;
         gap: 12px;
+        margin-top: 40px;
     }
 
     /* faq  */
@@ -1493,6 +1615,10 @@ input {
         right: 20px;
     }
 
+    .s-community-sec .link-box {}
+
+
+
 
 }
 
@@ -1515,7 +1641,7 @@ input {
         padding: 40px;
     }
 
-    .about-box .slide_wrap .slide_ui .progress_ctn .bar {
+    .about-box .progress_ctn .bar {
         width: 40px;
     }
 

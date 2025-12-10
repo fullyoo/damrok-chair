@@ -5,11 +5,11 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
 
-    <!-- iOS 전화번호, 이메일 자동링크 방지 -->
-    <meta name="format-detection" content="telephone=no, email=no">
+    <!-- iOS 전화번호, 이메일, 주소 자동링크 방지 -->
+    <meta name="format-detection" content="telephone=no, email=no, address=no">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>Damrok-Chair, 淡綠</title>
+    <title>Damrok, 淡綠</title>
     <link rel="icon" href="./assets/images/common/favicon.ico" type="image/x-icon">
 
     <!-- <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.css" > -->
@@ -68,56 +68,38 @@
         </div>
     </header>
 
-    <main class="main wrap">
+    <main id="main" class="wrap">
         <section class="mv-sec">
             <div class="slide_wrap">
-                <div class="slide_ctn">
+                <div class="mv_slide_ctn">
                     <div class="item">
-                        <div class="bg bg04">
-                        </div>
+                        <div class="bg bg04"></div>
                     </div>
                     <div class="item">
-                        <div class="bg bg03">
-                        </div>
+                        <div class="bg bg03"></div>
                     </div>
-                    <!-- <div class="item">
-                        <div class="bg bg05">
-                            <video loop playsinline muted autoplay>
-                                <source src="./assets/images/main/mv03.mp4" type="video/mp4">
-                            </video>
-                        </div>
-                    </div> -->
                     <div class="item">
-                        <div class="bg bg02">
-                        </div>
+                        <div class="bg bg02"></div>
                     </div>
                     <div class="item">
                         <div class="bg bg01">
                             <video loop playsinline muted autoplay>
                                 <source src="./assets/images/main/mv01.mp4" type="video/mp4">
                             </video>
-                            <!-- <video muted="muted" data-autoplay="data-autoplay" playsinline="playsinline" loop="loop">
-                                <source
-                                    src="https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4"
-                                    type="video/mp4">
-                            </video> -->
                         </div>
                     </div>
                 </div>
-                <div class="slide_ui">
+                <div class="mv_slide_ui">
                     <div class="m_tit">
                         <div class="slide_txt">
                             <div class="item">
                                 <h2>Damrok</h2>
-                                <h4>“은은한 초록, 머무는 쉼”</h4>
+                                <h4>"은은한 초록, 머무는 쉼"</h4>
                             </div>
                         </div>
                     </div>
-
                     <div class="progress_ctn">
-                        <div class="bars_container">
-                            <!-- 진행바들이 동적으로 생성됩니다 -->
-                        </div>
+                        <div class="bars_container"></div>
                         <div class="play_btn">
                             <div class="stop"></div>
                         </div>
@@ -247,22 +229,9 @@
 
         <section class="m-brand-sec">
             <div class="video-item">
-                <video loop playsinline muted autoplay>
-                    <source src="./assets/images/main/brand04.mp4" type="video/mp4">
+                <video loop playsinline muted autoplay style="object-position: center top">
+                    <source src="https://buly.kr/CM0VWKm" type="video/mp4">
                 </video>
-                <video loop playsinline muted autoplay style="object-position: left top">
-                    <source src="./assets/images/main/brand03.mp4" type="video/mp4">
-                </video>
-                <video loop playsinline muted autoplay style="object-position: left top">
-                    <source src="./assets/images/main/brand02.mp4" type="video/mp4">
-                </video>
-                <video loop playsinline muted autoplay>
-                    <source src="./assets/images/main/brand01.mp4" type="video/mp4">
-                </video>
-                <!-- <video loop playsinline muted autoplay>
-                <source src="./assets/images/main/brand05.mp4" type="video/mp4">
-            </video> -->
-                <!-- <source src="https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4" type="video/mp4"> -->
             </div>
             <div class="w1500">
                 <div class="m_tit tac text-box" data-aos="fade-up" data-aos-duration="800" data-aos-delay="100">
@@ -278,7 +247,7 @@
 
         <section class="m-insta-sec">
             <div class="loop-container">
-                <div class="insta-cta m_tit b tac">
+                <div class="insta-cta-wrap m_tit b tac">
                     <a href="https://www.instagram.com/yourprofile" target="_blank">
                         <h3>Instagram</h3>
                         <h5>@damrok_</h5>
@@ -423,7 +392,13 @@
             });
 
 
+            // 2. 상단 비주얼 세로 중앙-제이쿼리
+
+
+
         });  // 끝 코드
+
+
 
     </script>
 

@@ -961,6 +961,11 @@ video {
 		width: 160px;
 	}
 
+	.foot-wrap address b {
+		display: block;
+		margin-bottom: 5px;
+	}
+
 	.sns-box img {
 		width: 30px;
 	}

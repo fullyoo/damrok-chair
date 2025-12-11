@@ -99,6 +99,8 @@ $(function () {
             cssEase: "linear",
         });
 
+
+
         // 첫 진행바 활성화
         updateProgressBar(0);
 
@@ -203,6 +205,8 @@ $(function () {
     $(window).on('resize', function () {
         setVh();
     });
+
+
 
 
 

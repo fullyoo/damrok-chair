@@ -1558,6 +1558,7 @@ body:has(.intro[style*="display: block"]) {
 		/* fallback */
 		height: calc(var(--vh, 1vh) * 100 - 70px);
 		height: calc(100dvh - 70px);
+		height: 100dvh;
 	}
 
 	.m_tit h2 {
@@ -1592,6 +1593,7 @@ body:has(.intro[style*="display: block"]) {
 
 	#main {
 		margin-top: 70px;
+		margin-top: 0;
 	}
 
 	.mv-sec .slide_wrap .mv_slide_ui {

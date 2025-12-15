@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0">
+<channel>
+
+    <title>Damrok Chair</title>
+    <link>https://damrok-chair.netlify.app/</link>
+    <description>Damrok Chair official website updates</description>
+    <language>ko</language>
+    <lastBuildDate>Mon, 15 Dec 2025 09:00:00 +0900</lastBuildDate>
+
+    <!-- 메인 페이지 -->
+    <item>
+        <title>Damrok Chair - Main</title>
+        <link>https://damrok-chair.netlify.app/</link>
+        <guid>https://damrok-chair.netlify.app/</guid>
+        <pubDate>Mon, 15 Dec 2025 09:00:00 +0900</pubDate>
+        <description>Main page update</description>
+    </item>
+
+    <!-- Chair List -->
+    <item>
+        <title>Chair List</title>
+        <link>https://damrok-chair.netlify.app/chair-list.html</link>
+        <guid>https://damrok-chair.netlify.app/chair-list.html</guid>
+        <pubDate>Mon, 15 Dec 2025 09:00:00 +0900</pubDate>
+        <description>Chair product list page</description>
+    </item>
+
+    <!-- Brand -->
+    <item>
+        <title>Brand</title>
+        <link>https://damrok-chair.netlify.app/brand.html</link>
+        <guid>https://damrok-chair.netlify.app/brand.html</guid>
+        <pubDate>Mon, 15 Dec 2025 09:00:00 +0900</pubDate>
+        <description>Brand introduction page</description>
+    </item>
+
+    <!-- Chair View -->
+    <item>
+        <title>Chair View</title>
+        <link>https://damrok-chair.netlify.app/chair-view.html</link>
+        <guid>https://damrok-chair.netlify.app/chair-view.html</guid>
+        <pubDate>Mon, 15 Dec 2025 09:00:00 +0900</pubDate>
+        <description>Chair detail view</description>
+    </item>
+
+    <!-- Community -->
+    <item>
+        <title>Community</title>
+        <link>https://damrok-chair.netlify.app/community.html</link>
+        <guid>https://damrok-chair.netlify.app/community.html</guid>
+        <pubDate>Mon, 15 Dec 2025 09:00:00 +0900</pubDate>
+        <description>Community page</description>
+    </item>
+
+</channel>
+</rss>

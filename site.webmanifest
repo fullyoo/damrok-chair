@@ -1,0 +1,23 @@
+{
+  "name": "담록 체어",
+  "short_name": "담록",
+  "description": "담록 체어 공식 웹사이트",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#3B5C4D",
+  "theme_color": "#3B5C4D",
+"icons": [
+  {
+    "src": "/favi/favicon-32.png",
+    "sizes": "32x32",
+    "type": "image/png"
+  },
+  {
+    "src": "/favi/apple-touch-icon.png",
+    "sizes": "180x180",
+    "type": "image/png"
+  }
+]
+
+}
